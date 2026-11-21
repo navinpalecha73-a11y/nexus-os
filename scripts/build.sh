@@ -9,8 +9,32 @@ echo "Author: Navin Palecha"
 mkdir -p build
 cd build
 
-lb config   --distribution noble   --archive-areas "main restricted universe multiverse"   --architectures amd64   --binary-images iso-hybrid   --bootloader grub-efi   --image-name "nexus-os-2026-x86_64"   --system live   --linux-flavours generic
+lb config   --distribution noble   --archive-areas "main restricted universe multiverse"   --architectures amd64   --binary-images iso-hybrid   --bootloader grub-efi   --system live   --linux-flavours generic
 
-sudo lb build
-echo "Build complete. Checking output ISO:"
-ls -lh *.iso || true
+mkdir -p config/package-lists
+cat << 'EOF' > config/package-lists/nexus-core.list.chroot
+linux-generic
+linux-headers-generic
+linux-firmware
+network-manager
+pipewire
+pipewire-audio-client-libraries
+wireplumber
+sudo
+systemd
+bash
+curl
+wget
+git
+nano
+htop
+neofetch
+pciutils
+usbutils
+smartmontools
+EOF
+
+sudo lb build || true
+
+echo "Build step finished. Files:"
+ls -lh || true
