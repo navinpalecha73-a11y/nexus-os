@@ -24,51 +24,22 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y live-build debootstrap squashfs-tools xorriso isolinux syslinux-efi grub-pc-bin grub-efi-amd64-bin mtools dosfstools
 
-      - name: Set up live-build configuration
+      - name: Run Build Script
         run: |
-          mkdir -p build && cd build
-          lb config             --distribution noble             --archive-areas "main restricted universe multiverse"             --architectures amd64             --binary-images iso-hybrid             --bootloader grub-efi             --system live             --linux-flavours generic
-
-          mkdir -p config/package-lists
-          cat << 'EOF' > config/package-lists/nexus-core.list.chroot
-linux-generic
-linux-headers-generic
-linux-firmware
-network-manager
-pipewire
-pipewire-audio-client-libraries
-wireplumber
-sudo
-systemd
-bash
-curl
-wget
-git
-nano
-htop
-neofetch
-pciutils
-usbutils
-smartmontools
-EOF
-
-      - name: Build ISO
-        run: |
-          cd build
-          sudo lb build || true
-          ls -la
+          chmod +x scripts/build.sh
+          ./scripts/build.sh
 
       - name: Calculate Checksums
         run: |
           cd build
-          if ls *.iso 1> /dev/null 2>&1; then
+          if compgen -G "*.iso" > /dev/null; then
             for f in *.iso; do
-              mv "" "nexus-os-2026-x86_64.iso" 2>/dev/null || true
+              cp "$f" nexus-os-2026-x86_64.iso 2>/dev/null || true
               break
             done
             sha256sum *.iso > SHA256SUMS.txt
           else
-            echo "Draft ISO workflow initialized" > nexus-os-status.txt
+            echo "NEXUS OS Live-Build initiated - build artifacts log" > nexus-os-status.txt
             sha256sum nexus-os-status.txt > SHA256SUMS.txt
           fi
 
@@ -79,4 +50,5 @@ EOF
           path: |
             build/*.iso
             build/SHA256SUMS.txt
+            build/nexus-os-status.txt
           if-no-files-found: warn
