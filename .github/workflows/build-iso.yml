@@ -34,7 +34,7 @@ jobs:
           cd build
           if compgen -G "*.iso" > /dev/null; then
             for f in *.iso; do
-              cp "" nexus-os-2026-x86_64.iso 2>/dev/null || true
+              cp "${f}" nexus-os-2026-x86_64.iso 2>/dev/null || true
               break
             done
             sha256sum *.iso > SHA256SUMS.txt
