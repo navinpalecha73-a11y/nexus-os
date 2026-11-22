@@ -22,7 +22,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y live-build debootstrap squashfs-tools xorriso isolinux syslinux-efi grub-pc-bin grub-efi-amd64-bin mtools dosfstools
+          sudo apt-get install -y live-build debootstrap squashfs-tools xorriso isolinux syslinux syslinux-utils syslinux-efi grub-pc-bin grub-efi-amd64-bin mtools dosfstools
 
       - name: Run Build Script
         run: |
@@ -34,19 +34,19 @@ jobs:
           cd build
           if compgen -G "*.iso" > /dev/null; then
             for f in *.iso; do
-              cp "$f" nexus-os-2026-x86_64.iso 2>/dev/null || true
+              cp "" nexus-os-2026-x86_64.iso 2>/dev/null || true
               break
             done
             sha256sum *.iso > SHA256SUMS.txt
           else
-            echo "NEXUS OS Live-Build initiated - build artifacts log" > nexus-os-status.txt
+            echo "NEXUS OS Live-Build log" > nexus-os-status.txt
             sha256sum nexus-os-status.txt > SHA256SUMS.txt
           fi
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: nexus-os-build
+          name: nexus-os-iso
           path: |
             build/*.iso
             build/SHA256SUMS.txt
