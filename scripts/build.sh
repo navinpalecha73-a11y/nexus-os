@@ -7,8 +7,8 @@ echo "  Beyond Operating Systems. Created by Navin Palecha"
 echo "====================================================="
 
 BUILD_DIR="build"
-mkdir -p ""
-cd ""
+mkdir -p "${BUILD_DIR}"
+cd "${BUILD_DIR}"
 
 # Clean previous live-build state if present
 if [ -d config ]; then
@@ -43,7 +43,7 @@ git
 nano
 P1
 
-# 2. Desktop Shell & Graphical Installer (Windows-like Start Menu, Snapping, Calamares)
+# 2. Desktop Shell & Graphical Interface (Windows-like Start Menu, Snapping)
 cat << 'P2' > config/package-lists/02-desktop.list.chroot
 xfce4
 xfce4-goodies
@@ -51,13 +51,10 @@ xfce4-whiskermenu-plugin
 xfce4-taskmanager
 lightdm
 lightdm-gtk-greeter
-breeze-icon-theme
-calamares
-calamares-settings-ubuntu
 P2
 
-# 3. Native 15 Settings & System Managers
-cat << 'P3' > config/package-lists/03-settings.list.chroot
+# 3. Native 15 Settings & Managers
+cat << 'P3' > config/package-lists/03-settings-managers.list.chroot
 xfce4-settings
 hardinfo
 gnome-disk-utility
@@ -69,14 +66,12 @@ pciutils
 usbutils
 inxi
 htop
-neofetch
 dosfstools
 P3
 
-# 4. Windows App Compatibility (.exe / .msi) & Store
+# 4. Windows App Compatibility (.exe / .msi) & Runtime
 cat << 'P4' > config/package-lists/04-wine-store.list.chroot
 wine
-wine64
 winetricks
 P4
 
